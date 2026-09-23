@@ -1,0 +1,70 @@
+# =============================================================================
+# Lead Intelligence Engine — search & scoring configuration
+# =============================================================================
+# Edit this file to change targeting. Nothing here requires touching code.
+# Loaded by app/core/config.py. Values here are overridden by anything set
+# with the same name as an environment variable (env wins for secrets; this
+# file wins for everything else).
+
+# ---------------------------------------------------------------------------
+# Geography
+# ---------------------------------------------------------------------------
+country: "USA"
+states: []              # empty = no restriction, e.g. ["Texas", "Florida"]
+
+# ---------------------------------------------------------------------------
+# Ideal Customer Profile
+# ---------------------------------------------------------------------------
+employee_min: 10
+employee_max: 100
+preferred_employee_min: 20
+preferred_employee_max: 100
+
+# ---------------------------------------------------------------------------
+# Quality gates — nothing below these lines reaches MASTER_VERIFIED_LEADS
+# ---------------------------------------------------------------------------
+crm_score_min: 70          # CRM Opportunity Score (0-100)
+data_quality_min: 50       # Data Quality Score (0-100)
+
+# ---------------------------------------------------------------------------
+# Industries to search. Use "ALL" to run every template in
+# app/connectors/search_terms.py. Otherwise list the keys you want —
+# see search_terms.py for the full list of supported keys.
+# ---------------------------------------------------------------------------
+industries:
+  - "ALL"
+  # - roofing
+  # - hvac
+  # - plumbing
+  # - real_estate
+  # - dental
+  # - law_firm
+  # - marketing_agency
+
+# ---------------------------------------------------------------------------
+# Discovery limits
+# ---------------------------------------------------------------------------
+max_results_per_query: 20
+
+# ---------------------------------------------------------------------------
+# Which connectors run in `pipeline` / `discover --source all`.
+# Toggle these off/on without deleting any code.
+# facebook_pages and linkedin default OFF on purpose — see README
+# "Compliance notes" for why, and what to use instead.
+# ---------------------------------------------------------------------------
+sources:
+  google_places: true
+  google_search: true
+  website_enrichment: true
+  meta_ads: true
+  facebook_pages: false
+  linkedin: false
+  exa: true
+
+# ---------------------------------------------------------------------------
+# Rate limiting defaults (can be overridden per-connector via env vars —
+# see .env.example)
+# ---------------------------------------------------------------------------
+request_delay_seconds: 1.5
+request_timeout_seconds: 10
+max_retries: 3

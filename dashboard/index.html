@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lead Intelligence Engine — Run Viewer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #12161c;
+    --panel: #1a2029;
+    --line: #2a313d;
+    --text: #e7e5df;
+    --muted: #8b94a3;
+    --accent: #2f8f86;
+    --hot: #c9622e;
+    --very-high: #cc8b3c;
+    --high: #4c7a93;
+    --medium: #6b7280;
+    --low: #454c58;
+    --needs-review: #6c8ebf;
+    --rejected: #5b6270;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  .num { font-family: "IBM Plex Mono", ui-monospace, monospace; font-weight: 600; }
+
+  header {
+    border-bottom: 1px solid var(--line);
+    padding: 28px 32px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  header h1 { margin: 0; font-size: 19px; font-weight: 600; letter-spacing: 0.01em; }
+  header p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+  #meta { font-size: 13px; color: var(--muted); text-align: right; }
+  #meta .num { color: var(--text); }
+
+  #picker-wrap { padding: 60px 32px; max-width: 640px; }
+  #picker-wrap p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+  #file-input { display: none; }
+  .pick-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #0c1210;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 3px;
+    cursor: pointer;
+    border: none;
+  }
+  .pick-btn:hover { filter: brightness(1.08); }
+
+  main { padding: 28px 32px 60px; display: none; }
+  main.visible { display: block; }
+
+  .stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-bottom: 32px; }
+  .stat { background: var(--panel); padding: 18px 16px; border-left: 3px solid var(--edge, var(--line)); }
+  .stat .label { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .stat .value { font-size: 26px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 860px) { .grid-2, .stats { grid-template-columns: 1fr; } }
+
+  section.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 3px; padding: 20px 22px; margin-bottom: 24px; }
+  section.panel h2 { margin: 0 0 16px; font-size: 13px; font-weight: 600; color: var(--muted); text-transform: none; }
+
+  .bar-row { display: grid; grid-template-columns: 140px 1fr 44px; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; }
+  .bar-row .name { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { background: #10141a; border-radius: 2px; height: 8px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); }
+  .bar-row .count { color: var(--muted); text-align: right; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: var(--muted); font-weight: 500; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  td { padding: 7px 8px; border-bottom: 1px solid var(--line); }
+  tr:last-child td { border-bottom: none; }
+
+  .empty-note { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Lead Intelligence Engine</h1>
+    <p>Run viewer — open a <span class="num">RUN_REPORT.json</span> from your <span class="num">exports/</span> folder</p>
+  </div>
+  <div id="meta"></div>
+</header>
+
+<div id="picker-wrap">
+  <p>This reads a run report entirely in your browser — nothing is uploaded anywhere.
+     Run <span class="num">python -m app pipeline</span> or <span class="num">python -m app demo</span> first,
+     then load the file it wrote to <span class="num">exports/RUN_REPORT.json</span>.</p>
+  <label class="pick-btn" for="file-input">Load RUN_REPORT.json</label>
+  <input type="file" id="file-input" accept="application/json">
+</div>
+
+<main id="main">
+  <div class="stats" id="stats"></div>
+  <div class="grid-2">
+    <section class="panel">
+      <h2>By industry</h2>
+      <div id="by-industry"></div>
+    </section>
+    <section class="panel">
+      <h2>By state</h2>
+      <div id="by-state"></div>
+    </section>
+  </div>
+  <section class="panel">
+    <h2>By source</h2>
+    <table id="by-source"><thead><tr><th>Source</th><th>Companies</th></tr></thead><tbody></tbody></table>
+  </section>
+  <section class="panel">
+    <h2>Exports written this run</h2>
+    <div id="exports-list" class="empty-note"></div>
+  </section>
+</main>
+
+<script>
+document.getElementById('file-input').addEventListener('change', function (evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function () {
+    try {
+      render(JSON.parse(reader.result));
+    } catch (err) {
+      alert('Could not parse that file as JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+});
+
+function statDef(key, label) {
+  const edges = {
+    discovered: 'var(--muted)', duplicates: 'var(--low)', verified: 'var(--accent)',
+    qualified: 'var(--hot)', needs_review: 'var(--needs-review)', rejected: 'var(--rejected)',
+  };
+  return { key, label, edge: edges[key] || 'var(--line)' };
+}
+
+function barList(container, dataObj) {
+  container.innerHTML = '';
+  const entries = Object.entries(dataObj || {}).sort((a, b) => b[1] - a[1]);
+  if (!entries.length) {
+    container.innerHTML = '<p class="empty-note">No data for this run.</p>';
+    return;
+  }
+  const max = Math.max(...entries.map(e => e[1]));
+  entries.forEach(([name, count]) => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    const pct = Math.max(4, Math.round((count / max) * 100));
+    row.innerHTML = `<div class="name">${name}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <div class="count num">${count}</div>`;
+    container.appendChild(row);
+  });
+}
+
+function render(report) {
+  document.getElementById('picker-wrap').style.display = 'none';
+  document.getElementById('main').classList.add('visible');
+
+  document.getElementById('meta').innerHTML =
+    `Run <span class="num">#${report.run_id ?? '—'}</span> &middot; ${report.generated_at ? new Date(report.generated_at).toLocaleString() : ''}`;
+
+  const statsEl = document.getElementById('stats');
+  statsEl.innerHTML = '';
+  [
+    statDef('discovered', 'Discovered'),
+    statDef('duplicates', 'Duplicates merged'),
+    statDef('verified', 'Cross-source verified'),
+    statDef('qualified', 'In MASTER'),
+    statDef('needs_review', 'Needs review'),
+    statDef('rejected', 'Rejected'),
+  ].forEach(def => {
+    const div = document.createElement('div');
+    div.className = 'stat';
+    div.style.setProperty('--edge', def.edge);
+    div.innerHTML = `<div class="label">${def.label}</div><div class="value num">${report[def.key] ?? 0}</div>`;
+    statsEl.appendChild(div);
+  });
+
+  barList(document.getElementById('by-industry'), report.by_industry);
+  barList(document.getElementById('by-state'), report.by_state);
+
+  const sourceBody = document.querySelector('#by-source tbody');
+  sourceBody.innerHTML = '';
+  const sourceEntries = Object.entries(report.by_source || {});
+  if (!sourceEntries.length) {
+    sourceBody.innerHTML = '<tr><td colspan="2" class="empty-note">No data for this run.</td></tr>';
+  } else {
+    sourceEntries.sort((a, b) => b[1] - a[1]).forEach(([name, count]) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${name}</td><td class="num">${count}</td>`;
+      sourceBody.appendChild(tr);
+    });
+  }
+
+  const exportsEl = document.getElementById('exports-list');
+  exportsEl.innerHTML = (report.exports || []).map(e => `<div class="num">${e}</div>`).join('') || 'None recorded.';
+}
+</script>
+
+</body>
+</html>

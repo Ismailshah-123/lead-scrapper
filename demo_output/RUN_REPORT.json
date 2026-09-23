@@ -1,0 +1,40 @@
+{
+  "run_id": 1,
+  "generated_at": "2026-09-11T07:44:07.817761+00:00",
+  "discovered": 6,
+  "duplicates": 0,
+  "rejected": 3,
+  "needs_review": 2,
+  "verified": 1,
+  "qualified": 1,
+  "by_source": {
+    "demo": 6
+  },
+  "by_industry": {
+    "roofing": 1,
+    "hvac": 1,
+    "cleaning_services": 1,
+    "law_firm": 1,
+    "retail": 1,
+    "accounting_firm": 1
+  },
+  "by_state": {
+    "TX": 2,
+    "AZ": 1,
+    "IL": 1,
+    "OH": 1,
+    "CO": 1
+  },
+  "exports": [
+    "MASTER_VERIFIED_LEADS.xlsx",
+    "NEEDS_REVIEW.xlsx",
+    "REJECTED_LEADS.xlsx",
+    "COLD_CALL_PROSPECTS.xlsx",
+    "GOOGLE_MAPS_LEADS.xlsx",
+    "GOOGLE_SEARCH_LEADS.xlsx",
+    "META_LEADS.xlsx",
+    "FACEBOOK_LEADS.xlsx",
+    "LINKEDIN_LEADS.xlsx",
+    "WEBSITE_ENRICHED_LEADS.xlsx"
+  ]
+}

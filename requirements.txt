@@ -1,0 +1,28 @@
+# --- Core ---
+SQLAlchemy>=2.0.30
+pydantic>=2.7
+PyYAML>=6.0.1
+python-dotenv>=1.0.1
+
+# --- Data / export ---
+pandas>=2.2
+openpyxl>=3.1.2
+
+# --- HTTP / parsing ---
+requests>=2.31
+beautifulsoup4>=4.12
+
+# --- Validation / normalization ---
+phonenumbers>=8.13.40
+email-validator>=2.1.1
+
+# --- Reliability ---
+tenacity>=8.2.3
+
+# --- Optional: xAI/Grok API uses the existing requests dependency ---
+
+# --- UI ---
+streamlit>=1.40
+
+# --- Testing ---
+pytest>=7.4
