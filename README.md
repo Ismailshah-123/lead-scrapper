@@ -1,16 +1,19 @@
 # Lead Intelligence Engine
 
-A CRM/AI-automation prospecting system built for [VertexData Systems](https://vertex-data-system.vercel.app/).
+**Evidence-led prospect research and qualification for CRM and AI-automation opportunities.**
 
-It does **not** try to be a scraper that maximizes lead count. It tries to answer, for
-each company it finds: *who are they, how big are they, how do I reach them, who's the
-decision maker, where did every fact come from, why might they need CRM/automation, and
-what should I say when I call them* — and it says "not publicly verified" instead of
-guessing whenever it doesn't actually know.
+Built for [VertexData Systems](https://vertex-data-system.vercel.app/), this project is designed to produce fewer, better-understood prospects rather than maximize raw lead volume.
 
-**Read "Compliance notes" below before you point this at anything.** It explains why two
-of the six sources you asked for (LinkedIn, and general Facebook page discovery) aren't
-implemented as scrapers, and what to use instead.
+For each company, the workflow aims to establish:
+- Company identity, location, size, and relevant business signals
+- Publicly available contact and decision-maker information
+- Source evidence and confidence for important facts
+- A reasoned fit assessment for CRM or automation services
+- A practical, research-backed outreach angle
+
+Unknown or conflicting details are marked for review instead of being silently guessed.
+
+> **Compliance first:** Read the [Compliance notes](#compliance-notes) before using live sources. The project intentionally avoids unsupported or prohibited scraping approaches and documents alternative research methods.
 
 ---
 
